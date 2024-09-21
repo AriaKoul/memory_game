@@ -64,6 +64,12 @@
         let score = 0;
 
         function initializeGame() {
+            gameBoard.innerHTML = ''; // Clear the game board
+            cards = [];
+            flippedCards = [];
+            score = 0;
+            scoreValue.textContent = score;
+
             const shuffledSymbols = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
             shuffledSymbols.forEach((symbol, index) => {
                 const card = document.createElement('div');
@@ -102,6 +108,11 @@
                 card2.textContent = '';
             }
             flippedCards = [];
+
+            if (score === symbols.length * 10) {
+                alert('Congratulations! You won!');
+                initializeGame(); // Restart the game
+            }
         }
 
         initializeGame();
