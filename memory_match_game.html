@@ -1,0 +1,88 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Memory Match Game</title>
+    <style>
+        .game-board {
+            display: grid;
+            grid-template-columns: repeat(4, 1fr);
+            gap: 10px;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        .card {
+            aspect-ratio: 3/4;
+            background-color: #ddd;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .card.flipped {
+            background-color: #fff;
+        }
+    </style>
+</head>
+<body>
+    <div id="game-container">
+        <h1>Memory Match Game</h1>
+        <div id="game-board" class="game-board"></div>
+        <div id="score">Score: <span id="score-value">0</span></div>
+    </div>
+
+    <script>
+        const symbols = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
+        const gameBoard = document.getElementById('game-board');
+        const scoreValue = document.getElementById('score-value');
+        let cards = [];
+        let flippedCards = [];
+        let score = 0;
+
+        function initializeGame() {
+            const shuffledSymbols = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
+            shuffledSymbols.forEach((symbol, index) => {
+                const card = document.createElement('div');
+                card.classList.add('card');
+                card.dataset.symbol = symbol;
+                card.dataset.index = index;
+                card.addEventListener('click', flipCard);
+                gameBoard.appendChild(card);
+                cards.push(card);
+            });
+        }
+
+        function flipCard() {
+            if (flippedCards.length < 2 && !this.classList.contains('flipped')) {
+                this.classList.add('flipped');
+                this.textContent = this.dataset.symbol;
+                flippedCards.push(this);
+
+                if (flippedCards.length === 2) {
+                    setTimeout(checkMatch, 1000);
+                }
+            }
+        }
+
+        function checkMatch() {
+            const [card1, card2] = flippedCards;
+            if (card1.dataset.symbol === card2.dataset.symbol) {
+                score += 10;
+                scoreValue.textContent = score;
+                card1.removeEventListener('click', flipCard);
+                card2.removeEventListener('click', flipCard);
+            } else {
+                card1.classList.remove('flipped');
+                card2.classList.remove('flipped');
+                card1.textContent = '';
+                card2.textContent = '';
+            }
+            flippedCards = [];
+        }
+
+        initializeGame();
+    </script>
+</body>
+</html>
