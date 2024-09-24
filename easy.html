@@ -32,7 +32,7 @@
         .card.flipped {
             background-color: #fff;
         }
-        #score {
+        #score, #debug {
             font-size: 18px;
             margin-top: 10px;
         }
@@ -49,21 +49,29 @@
         }
     </style>
 </head>
-<body>
+body>
     <h1>Memory Match Game - Easy</h1>
     <div id="game-board" class="game-board"></div>
     <div id="score">Score: <span id="score-value">0</span></div>
+    <div id="debug">Debug info will appear here</div>
     <a href="index.html" class="button">Back to Menu</a>
 
     <script>
         const symbols = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
         const gameBoard = document.getElementById('game-board');
         const scoreValue = document.getElementById('score-value');
+        const debugElement = document.getElementById('debug');
         let cards = [];
         let flippedCards = [];
         let score = 0;
 
+        function debug(message) {
+            console.log(message);
+            debugElement.textContent += message + '\n';
+        }
+
         function initializeGame() {
+            debug('Initializing game...');
             gameBoard.innerHTML = ''; // Clear the game board
             cards = [];
             flippedCards = [];
@@ -71,18 +79,25 @@
             scoreValue.textContent = score;
 
             const shuffledSymbols = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
+            debug(`Created ${shuffledSymbols.length} shuffled symbols`);
+
             shuffledSymbols.forEach((symbol, index) => {
                 const card = document.createElement('div');
                 card.classList.add('card');
                 card.dataset.symbol = symbol;
                 card.dataset.index = index;
                 card.addEventListener('click', flipCard);
+                card.textContent = '?'; // Add this line to show a placeholder
                 gameBoard.appendChild(card);
                 cards.push(card);
             });
+
+            debug(`Created ${cards.length} cards`);
+            debug(`Game board dimensions: ${gameBoard.offsetWidth}x${gameBoard.offsetHeight}`);
         }
 
         function flipCard() {
+            debug('Card flipped');
             if (flippedCards.length < 2 && !this.classList.contains('flipped')) {
                 this.classList.add('flipped');
                 this.textContent = this.dataset.symbol;
@@ -101,21 +116,27 @@
                 scoreValue.textContent = score;
                 card1.removeEventListener('click', flipCard);
                 card2.removeEventListener('click', flipCard);
+                debug('Match found');
             } else {
                 card1.classList.remove('flipped');
                 card2.classList.remove('flipped');
-                card1.textContent = '';
-                card2.textContent = '';
+                card1.textContent = '?';
+                card2.textContent = '?';
+                debug('No match');
             }
             flippedCards = [];
 
             if (score === symbols.length * 10) {
+                debug('Game won');
                 alert('Congratulations! You won!');
                 initializeGame(); // Restart the game
             }
         }
 
-        initializeGame();
+        window.onload = function() {
+            debug('Window loaded');
+            initializeGame();
+        };
     </script>
 </body>
 </html>
