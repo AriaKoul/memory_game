@@ -11,34 +11,47 @@
             flex-direction: column;
             align-items: center;
             background-color: #f0f0f0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
         }
         .game-board {
             display: grid;
             grid-template-columns: repeat(5, 1fr);
-            gap: 10px;
-            max-width: 400px;
+            gap: 20px;
+            max-width: 800px;
             margin: 20px 0;
         }
         .card {
-            aspect-ratio: 3/4;
+            aspect-ratio: 1;
             background-color: #ddd;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
+            font-size: 48px;
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 15px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .card:hover {
+            transform: scale(1.05);
         }
         .card.flipped {
             background-color: #fff;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
         #score {
-            font-size: 18px;
-            margin-top: 10px;
+            font-size: 24px;
+            margin-top: 20px;
+            font-weight: bold;
+            color: #4CAF50;
         }
         .button {
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 12px 24px;
+            font-size: 18px;
             color: white;
             background-color: #4CAF50;
             border: none;
@@ -46,6 +59,20 @@
             cursor: pointer;
             text-decoration: none;
             margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #45a049;
+        }
+        #win-message {
+            font-size: 36px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-top: 20px;
+            display: none;
+        }
+        #play-again {
+            display: none;
         }
     </style>
 </head>
@@ -53,30 +80,38 @@
     <h1>Memory Match Game - Medium</h1>
     <div id="game-board" class="game-board"></div>
     <div id="score">Score: <span id="score-value">0</span></div>
+    <div id="win-message">Congratulations! You won!</div>
     <a href="index.html" class="button">Back to Menu</a>
+    <button id="play-again" class="button">Play Again</button>
 
     <script>
         const symbols = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼', '🐨', '🐯'];
         const gameBoard = document.getElementById('game-board');
         const scoreValue = document.getElementById('score-value');
+        const winMessage = document.getElementById('win-message');
+        const playAgainButton = document.getElementById('play-again');
         let cards = [];
         let flippedCards = [];
         let score = 0;
 
         function initializeGame() {
-            gameBoard.innerHTML = ''; // Clear the game board
+            gameBoard.innerHTML = '';
             cards = [];
             flippedCards = [];
             score = 0;
             scoreValue.textContent = score;
+            winMessage.style.display = 'none';
+            playAgainButton.style.display = 'none';
 
             const shuffledSymbols = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
+
             shuffledSymbols.forEach((symbol, index) => {
                 const card = document.createElement('div');
                 card.classList.add('card');
                 card.dataset.symbol = symbol;
                 card.dataset.index = index;
                 card.addEventListener('click', flipCard);
+                card.textContent = '?';
                 gameBoard.appendChild(card);
                 cards.push(card);
             });
@@ -104,18 +139,21 @@
             } else {
                 card1.classList.remove('flipped');
                 card2.classList.remove('flipped');
-                card1.textContent = '';
-                card2.textContent = '';
+                card1.textContent = '?';
+                card2.textContent = '?';
             }
             flippedCards = [];
 
             if (score === symbols.length * 10) {
-                alert('Congratulations! You won!');
-                initializeGame(); // Restart the game
+                winMessage.style.display = 'block';
+                playAgainButton.style.display = 'inline-block';
+                cards.forEach(card => card.removeEventListener('click', flipCard));
             }
         }
 
-        initializeGame();
+        playAgainButton.addEventListener('click', initializeGame);
+
+        window.onload = initializeGame;
     </script>
 </body>
 </html>
