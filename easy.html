@@ -20,19 +20,19 @@
         .game-board {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 15px;
-            max-width: 600px; /* Increased from 400px */
+            gap: 20px;
+            max-width: 800px; /* Increased from 600px */
             margin: 20px 0;
         }
         .card {
-            aspect-ratio: 3/4;
+            aspect-ratio: 1; /* Changed to 1 for square cards */
             background-color: #ddd;
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 36px; /* Increased from 24px */
+            font-size: 48px; /* Increased from 36px */
             cursor: pointer;
-            border-radius: 10px;
+            border-radius: 15px;
             transition: all 0.3s ease;
             box-shadow: 0 4px 8px rgba(0,0,0,0.1);
         }
@@ -64,18 +64,27 @@
         .button:hover {
             background-color: #45a049;
         }
+        #win-message {
+            font-size: 36px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-top: 20px;
+            display: none;
+        }
     </style>
 </head>
 <body>
     <h1>Memory Match Game - Easy</h1>
     <div id="game-board" class="game-board"></div>
     <div id="score">Score: <span id="score-value">0</span></div>
+    <div id="win-message">Congratulations! You won!</div>
     <a href="index.html" class="button">Back to Menu</a>
 
     <script>
         const symbols = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
         const gameBoard = document.getElementById('game-board');
         const scoreValue = document.getElementById('score-value');
+        const winMessage = document.getElementById('win-message');
         let cards = [];
         let flippedCards = [];
         let score = 0;
@@ -86,6 +95,7 @@
             flippedCards = [];
             score = 0;
             scoreValue.textContent = score;
+            winMessage.style.display = 'none';
 
             const shuffledSymbols = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
 
@@ -129,8 +139,10 @@
             flippedCards = [];
 
             if (score === symbols.length * 10) {
-                alert('Congratulations! You won!');
-                initializeGame();
+                winMessage.style.display = 'block';
+                setTimeout(() => {
+                    initializeGame();
+                }, 3000);
             }
         }
 
