@@ -11,12 +11,17 @@
             flex-direction: column;
             align-items: center;
             background-color: #f0f0f0;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 20px;
         }
         .game-board {
             display: grid;
             grid-template-columns: repeat(4, 1fr);
-            gap: 10px;
-            max-width: 400px;
+            gap: 15px;
+            max-width: 600px; /* Increased from 400px */
             margin: 20px 0;
         }
         .card {
@@ -25,20 +30,28 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
+            font-size: 36px; /* Increased from 24px */
             cursor: pointer;
-            border-radius: 5px;
+            border-radius: 10px;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+        }
+        .card:hover {
+            transform: scale(1.05);
         }
         .card.flipped {
             background-color: #fff;
+            box-shadow: 0 6px 12px rgba(0,0,0,0.15);
         }
-        #score, #debug {
-            font-size: 18px;
-            margin-top: 10px;
+        #score {
+            font-size: 24px;
+            margin-top: 20px;
+            font-weight: bold;
+            color: #4CAF50;
         }
         .button {
-            padding: 10px 20px;
-            font-size: 16px;
+            padding: 12px 24px;
+            font-size: 18px;
             color: white;
             background-color: #4CAF50;
             border: none;
@@ -46,40 +59,35 @@
             cursor: pointer;
             text-decoration: none;
             margin-top: 20px;
+            transition: background-color 0.3s ease;
+        }
+        .button:hover {
+            background-color: #45a049;
         }
     </style>
 </head>
-body>
+<body>
     <h1>Memory Match Game - Easy</h1>
     <div id="game-board" class="game-board"></div>
     <div id="score">Score: <span id="score-value">0</span></div>
-    <div id="debug">Debug info will appear here</div>
     <a href="index.html" class="button">Back to Menu</a>
 
     <script>
         const symbols = ['🐶', '🐱', '🐭', '🐹', '🐰', '🦊', '🐻', '🐼'];
         const gameBoard = document.getElementById('game-board');
         const scoreValue = document.getElementById('score-value');
-        const debugElement = document.getElementById('debug');
         let cards = [];
         let flippedCards = [];
         let score = 0;
 
-        function debug(message) {
-            console.log(message);
-            debugElement.textContent += message + '\n';
-        }
-
         function initializeGame() {
-            debug('Initializing game...');
-            gameBoard.innerHTML = ''; // Clear the game board
+            gameBoard.innerHTML = '';
             cards = [];
             flippedCards = [];
             score = 0;
             scoreValue.textContent = score;
 
             const shuffledSymbols = [...symbols, ...symbols].sort(() => Math.random() - 0.5);
-            debug(`Created ${shuffledSymbols.length} shuffled symbols`);
 
             shuffledSymbols.forEach((symbol, index) => {
                 const card = document.createElement('div');
@@ -87,17 +95,13 @@ body>
                 card.dataset.symbol = symbol;
                 card.dataset.index = index;
                 card.addEventListener('click', flipCard);
-                card.textContent = '?'; // Add this line to show a placeholder
+                card.textContent = '?';
                 gameBoard.appendChild(card);
                 cards.push(card);
             });
-
-            debug(`Created ${cards.length} cards`);
-            debug(`Game board dimensions: ${gameBoard.offsetWidth}x${gameBoard.offsetHeight}`);
         }
 
         function flipCard() {
-            debug('Card flipped');
             if (flippedCards.length < 2 && !this.classList.contains('flipped')) {
                 this.classList.add('flipped');
                 this.textContent = this.dataset.symbol;
@@ -116,27 +120,21 @@ body>
                 scoreValue.textContent = score;
                 card1.removeEventListener('click', flipCard);
                 card2.removeEventListener('click', flipCard);
-                debug('Match found');
             } else {
                 card1.classList.remove('flipped');
                 card2.classList.remove('flipped');
                 card1.textContent = '?';
                 card2.textContent = '?';
-                debug('No match');
             }
             flippedCards = [];
 
             if (score === symbols.length * 10) {
-                debug('Game won');
                 alert('Congratulations! You won!');
-                initializeGame(); // Restart the game
+                initializeGame();
             }
         }
 
-        window.onload = function() {
-            debug('Window loaded');
-            initializeGame();
-        };
+        window.onload = initializeGame;
     </script>
 </body>
 </html>
