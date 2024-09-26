@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Memory Match Game - Medium (Fruits)</title>
+    <title>Medium (Fruits)</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -31,7 +31,7 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            font-size: 24px;
+            font-size: 36px;
             cursor: pointer;
             transition: transform 0.3s;
         }
@@ -66,7 +66,7 @@
     </style>
 </head>
 <body>
-    <h1>Memory Match Game - Medium (Fruits)</h1>
+    <h1>Medium (Fruits)</h1>
     <div id="game-board" class="game-board"></div>
     <div id="score">Score: <span id="score-value">0</span></div>
     <div id="win-message">Congratulations! You won!!</div>
@@ -103,7 +103,7 @@
                 flippedCards.push(this);
 
                 if (flippedCards.length === 2) {
-                    setTimeout(checkMatch, 500);
+                    setTimeout(checkMatch, 700);
                 }
             }
         }
