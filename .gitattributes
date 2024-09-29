@@ -1,9 +1,4 @@
-# Treat HTML files as both HTML and JavaScript
-*.html linguist-detectable
-
-# Ensure any standalone JS files are counted as JavaScript
-*.js linguist-language=JavaScript
-
-# Ignore vendor files and node_modules in language stats
-vendor/* linguist-vendored
-node_modules/* linguist-vendored
+*.html linguist-language=HTML+JavaScript
+*.html linguist-language=HTML linguist-detectable=true
+*.html linguist-documentation=false
+*.html linguist-vendored=false
