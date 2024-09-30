@@ -1,9 +1,5 @@
 *.html linguist-language=HTML
-   *.html linguist-detectable=true
-   *.html linguist-documentation=false
-   *.html linguist-vendored=false
-
-   *.html linguist-generated=false
-   *.html -linguist-vendored
-
-   *.html linguist-language=JavaScript
+*.html linguist-detectable=true
+*.html linguist-documentation=false
+*.html linguist-vendored=false
+*.html linguist-language=HTML,JavaScript
