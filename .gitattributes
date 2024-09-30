@@ -2,4 +2,4 @@
 *.html linguist-detectable=true
 *.html linguist-documentation=false
 *.html linguist-vendored=false
-*.html linguist-language=HTML=70,JavaScript=30
+*.html linguist-language=HTML,JavaScript
