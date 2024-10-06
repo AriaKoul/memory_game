@@ -4,13 +4,14 @@
 let fruits;
 let POINTS_PER_MATCH;
 
+let cards = [...fruits, ...fruits];
 let flippedCards = [];
 let matchedPairs = 0;
 let score = 0;
-let canFlip = true;
-let consecutiveMatches = 0;
+let attempts = 0;
 
-function shuffleArray(array) {
+
+function shuffleCards(array) {
     for (let i = array.length - 1; i > 0; i--) {
         const j = Math.floor(Math.random() * (i + 1));
         [array[i], array[j]] = [array[j], array[i]];
@@ -18,114 +19,85 @@ function shuffleArray(array) {
     return array;
 }
 
+
 function createCard(fruit) {
     const card = document.createElement('div');
     card.classList.add('card');
-    card.innerHTML = `
-        <div class="card-inner">
-            <div class="card-front"></div>
-            <div class="card-back">${fruit}</div>
-        </div>
-    `;
-    card.addEventListener('click', () => flipCard(card));
+    card.dataset.fruit = fruit;
+    card.addEventListener('click', flipCard);
     return card;
 }
 
-function flipCard(card) {
-    if (!canFlip || card.classList.contains('flipped')) return;
-    
-    card.classList.add('flipped');
-    flippedCards.push(card);
 
-    if (flippedCards.length === 2) {
-        canFlip = false;
-        checkForMatch();
+function flipCard() {
+    if (flippedCards.length < 2 && !this.classList.contains('flipped')) {
+        this.classList.add('flipped');
+        this.textContent = this.dataset.fruit;
+        flippedCards.push(this);
+
+
+        if (flippedCards.length === 2) {
+            setTimeout(checkMatch, 700);
+        }
     }
 }
 
-function checkForMatch() {
+
+function checkMatch() {
+    attempts++;
     const [card1, card2] = flippedCards;
-    const fruit1 = card1.querySelector('.card-back').textContent;
-    const fruit2 = card2.querySelector('.card-back').textContent;
-
-    if (fruit1 === fruit2) {
-        let pointsEarned = POINTS_PER_MATCH;
-        consecutiveMatches++;
-        
-        // Apply bonus for consecutive matches
-        if (consecutiveMatches > 1) {
-            pointsEarned *= consecutiveMatches;
-        }
-        
-        score += pointsEarned;
-        updateScore();
+    if (card1.dataset.fruit === card2.dataset.fruit) {
+        card1.removeEventListener('click', flipCard);
+        card2.removeEventListener('click', flipCard);
         matchedPairs++;
-        flippedCards = [];
-        canFlip = true;
-        checkForWin();
-        
-        // Display bonus message
-        if (consecutiveMatches > 1) {
-            showBonusMessage(consecutiveMatches, pointsEarned);
-        }
+        score += POINTS_PER_MATCH;
     } else {
-        consecutiveMatches = 0;
-        setTimeout(() => {
-            card1.classList.remove('flipped');
-            card2.classList.remove('flipped');
-            flippedCards = [];
-            canFlip = true;
-        }, 1000);
+        card1.classList.remove('flipped');
+        card2.classList.remove('flipped');
+        card1.textContent = '';
+        card2.textContent = '';
     }
-}
 
-function showBonusMessage(streak, points) {
-    const bonusMessage = document.getElementById('bonus-message');
-    bonusMessage.textContent = `${streak}x Bonus! +${points} points`;
-    bonusMessage.style.display = 'block';
-    setTimeout(() => {
-        bonusMessage.style.display = 'none';
-    }, 2000);
+
+    flippedCards = [];
+    updateScore();
+    checkWin();
 }
 
 function updateScore() {
     document.getElementById('score-value').textContent = score;
 }
 
-function checkForWin() {
-    if (matchedPairs === fruits.length / 2) {
+
+function checkWin() {
+    if (matchedPairs === fruits.length) {
+        const minAttempts = fruits.length;
+        const maxBonus = fruits.length * POINTS_PER_MATCH / 2; // 50% bonus for perfect game
+        const bonus = Math.max(0, Math.floor(maxBonus * (1 - (attempts - minAttempts) / (minAttempts * 2))));
+        score += bonus;
+        updateScore();
+        document.getElementById('win-message').textContent = `Congratulations! You won!! Bonus: ${bonus}`;
         document.getElementById('win-message').style.display = 'block';
     }
 }
 
+
 function initializeGame() {
     const gameBoard = document.getElementById('game-board');
-    gameBoard.innerHTML = ''; // Clear the game board
-    const shuffledFruits = shuffleArray([...fruits, ...fruits]);
-    
-    shuffledFruits.forEach(fruit => {
+    gameBoard.innerHTML = '';
+    cards = shuffleCards(cards);
+    matchedPairs = 0;
+    score = 0;
+    updateScore();
+    document.getElementById('win-message').style.display = 'none';
+
+
+    cards.forEach(fruit => {
         const card = createCard(fruit);
         gameBoard.appendChild(card);
     });
-
-    // Reset game state
-    flippedCards = [];
-    matchedPairs = 0;
-    score = 0;
-    canFlip = true;
-    consecutiveMatches = 0;
-    
-    updateScore();
-    document.getElementById('win-message').style.display = 'none';
-    document.getElementById('bonus-message').style.display = 'none';
 }
+document.getElementById('play-again').addEventListener('click', initializeGame);
 
-function resetGame() {
-    initializeGame();
-}
 
-// Initialize the game when the script loads
-window.addEventListener('DOMContentLoaded', () => {
-    initializeGame();
-    document.querySelector('button').addEventListener('click', resetGame);
-});
+       initializeGame();
