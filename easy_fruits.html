@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="fruit_background.css">
     <title>Easy (Fruits)</title>
+    <script src="memory-game.js"></script>
+    <link rel="stylesheet" href="fruit_background.css">
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -75,6 +76,12 @@
     <button id="play-again" class="button">Play Again</button>
 
     <script>
+        // Level-specific variables
+        const fruits = ['🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓'];
+        const POINTS_PER_MATCH = 10;
+    </script>
+    
+    <!-- <script>
         const fruits = ['🍎', '🍐', '🍊', '🍋', '🍌', '🍉', '🍇', '🍓'];
         const POINTS_PER_MATCH = 10; 
         let cards = [...fruits, ...fruits];
@@ -165,6 +172,6 @@
         document.getElementById('play-again').addEventListener('click', initializeGame);
 
         initializeGame();
-    </script>
+    </script> -->
 </body>
 </html>
