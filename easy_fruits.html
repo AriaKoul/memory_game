@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Easy (Fruits)</title>
-    <script src="memory-game.js"></script>
+    <script src="fruit_animation.js"></script>
     <link rel="stylesheet" href="fruit_background.css">
     <style>
         body {
@@ -52,6 +52,19 @@
             color: green;
             font-weight: bold;
         }
+        #bonus-message {
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: rgba(0, 255, 0, 0.7);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            font-size: 24px;
+            z-index: 1000;
+        }
         .button {
             display: inline-block;
             padding: 10px 20px;
@@ -65,6 +78,7 @@
         .button:hover {
             background-color: #45a049;
         }
+
     </style>
 </head>
 <body>
@@ -72,6 +86,7 @@
     <div id="game-board" class="game-board"></div>
     <div id="score">Score: <span id="score-value">0</span></div>
     <div id="win-message">Congratulations! You won!!</div>
+    <div id="bonus-message"></div>
     <a href="index.html" class="button">Back to Menu</a>
     <!-- <button id="play-again" class="button">Play Again</button> -->
     <button onclick="resetGame()">Play Again</button>
