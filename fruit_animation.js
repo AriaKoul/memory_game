@@ -1,3 +1,5 @@
+// memory-game.js
+
 // These variables will be set in each HTML file
 let fruits;
 let POINTS_PER_MATCH;
@@ -6,6 +8,7 @@ let flippedCards = [];
 let matchedPairs = 0;
 let score = 0;
 let canFlip = true;
+let consecutiveMatches = 0;
 
 function shuffleArray(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -46,13 +49,27 @@ function checkForMatch() {
     const fruit2 = card2.querySelector('.card-back').textContent;
 
     if (fruit1 === fruit2) {
-        score += POINTS_PER_MATCH;
+        let pointsEarned = POINTS_PER_MATCH;
+        consecutiveMatches++;
+        
+        // Apply bonus for consecutive matches
+        if (consecutiveMatches > 1) {
+            pointsEarned *= consecutiveMatches;
+        }
+        
+        score += pointsEarned;
         updateScore();
         matchedPairs++;
         flippedCards = [];
         canFlip = true;
         checkForWin();
+        
+        // Display bonus message
+        if (consecutiveMatches > 1) {
+            showBonusMessage(consecutiveMatches, pointsEarned);
+        }
     } else {
+        consecutiveMatches = 0;
         setTimeout(() => {
             card1.classList.remove('flipped');
             card2.classList.remove('flipped');
@@ -60,6 +77,15 @@ function checkForMatch() {
             canFlip = true;
         }, 1000);
     }
+}
+
+function showBonusMessage(streak, points) {
+    const bonusMessage = document.getElementById('bonus-message');
+    bonusMessage.textContent = `${streak}x Bonus! +${points} points`;
+    bonusMessage.style.display = 'block';
+    setTimeout(() => {
+        bonusMessage.style.display = 'none';
+    }, 2000);
 }
 
 function updateScore() {
@@ -74,6 +100,7 @@ function checkForWin() {
 
 function initializeGame() {
     const gameBoard = document.getElementById('game-board');
+    gameBoard.innerHTML = ''; // Clear the game board
     const shuffledFruits = shuffleArray([...fruits, ...fruits]);
     
     shuffledFruits.forEach(fruit => {
@@ -81,20 +108,24 @@ function initializeGame() {
         gameBoard.appendChild(card);
     });
 
-    document.querySelector('.button').addEventListener('click', resetGame);
-    updateScore();
-}
-
-function resetGame() {
-    const gameBoard = document.getElementById('game-board');
-    gameBoard.innerHTML = '';
+    // Reset game state
     flippedCards = [];
     matchedPairs = 0;
     score = 0;
     canFlip = true;
+    consecutiveMatches = 0;
+    
+    updateScore();
     document.getElementById('win-message').style.display = 'none';
+    document.getElementById('bonus-message').style.display = 'none';
+}
+
+function resetGame() {
     initializeGame();
 }
 
 // Initialize the game when the script loads
-window.addEventListener('DOMContentLoaded', initializeGame);
+window.addEventListener('DOMContentLoaded', () => {
+    initializeGame();
+    document.querySelector('button').addEventListener('click', resetGame);
+});
