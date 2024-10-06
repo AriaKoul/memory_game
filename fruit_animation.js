@@ -1,15 +1,14 @@
-// memory-game.js
+// fruit_animation.js
 
-// These variables will be set in each HTML file
-let fruits;
-let POINTS_PER_MATCH;
+// These variables are now defined in the HTML file
+// let fruits;
+// let POINTS_PER_MATCH;
 
 let cards = [...fruits, ...fruits];
 let flippedCards = [];
 let matchedPairs = 0;
 let score = 0;
 let attempts = 0;
-
 
 function shuffleCards(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -19,7 +18,6 @@ function shuffleCards(array) {
     return array;
 }
 
-
 function createCard(fruit) {
     const card = document.createElement('div');
     card.classList.add('card');
@@ -28,20 +26,17 @@ function createCard(fruit) {
     return card;
 }
 
-
 function flipCard() {
     if (flippedCards.length < 2 && !this.classList.contains('flipped')) {
         this.classList.add('flipped');
         this.textContent = this.dataset.fruit;
         flippedCards.push(this);
 
-
         if (flippedCards.length === 2) {
             setTimeout(checkMatch, 700);
         }
     }
 }
-
 
 function checkMatch() {
     attempts++;
@@ -58,7 +53,6 @@ function checkMatch() {
         card2.textContent = '';
     }
 
-
     flippedCards = [];
     updateScore();
     checkWin();
@@ -67,7 +61,6 @@ function checkMatch() {
 function updateScore() {
     document.getElementById('score-value').textContent = score;
 }
-
 
 function checkWin() {
     if (matchedPairs === fruits.length) {
@@ -81,16 +74,15 @@ function checkWin() {
     }
 }
 
-
 function initializeGame() {
     const gameBoard = document.getElementById('game-board');
     gameBoard.innerHTML = '';
-    cards = shuffleCards(cards);
+    cards = shuffleCards([...fruits, ...fruits]);
     matchedPairs = 0;
     score = 0;
+    attempts = 0;
     updateScore();
     document.getElementById('win-message').style.display = 'none';
-
 
     cards.forEach(fruit => {
         const card = createCard(fruit);
@@ -98,13 +90,9 @@ function initializeGame() {
     });
 }
 
-
 function resetGame() {
     initializeGame();
 }
 
 // Initialize the game when the script loads
-window.addEventListener('DOMContentLoaded', () => {
-    initializeGame();
-    document.querySelector('button').addEventListener('click', resetGame);
-});
+window.addEventListener('DOMContentLoaded', initializeGame);
