@@ -97,7 +97,14 @@ function initializeGame() {
         gameBoard.appendChild(card);
     });
 }
-document.getElementById('play-again').addEventListener('click', initializeGame);
 
 
-       initializeGame();
+function resetGame() {
+    initializeGame();
+}
+
+// Initialize the game when the script loads
+window.addEventListener('DOMContentLoaded', () => {
+    initializeGame();
+    document.querySelector('button').addEventListener('click', resetGame);
+});
