@@ -89,5 +89,7 @@ function resetGame() {
 }
 
 // Initialize the game when the script loads
-window.addEventListener('DOMContentLoaded', initializeGame);
-document.getElementById('play-again').addEventListener('click', initializeGame);
+window.addEventListener('DOMContentLoaded', () => {
+    initializeGame();
+    document.getElementById('play-again').addEventListener('click', resetGame);
+});
