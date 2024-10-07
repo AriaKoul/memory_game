@@ -1,9 +1,3 @@
-// fruit_animation.js
-
-// These variables are now defined in the HTML file
-// let fruits;
-// let POINTS_PER_MATCH;
-
 let cards = [...fruits, ...fruits];
 let flippedCards = [];
 let matchedPairs = 0;
