@@ -5,6 +5,7 @@ let score = 0;
 let moves = 0;
 let timerInterval;
 let seconds = 0;
+let gameStarted = false;
 
 function shuffleCards(array) {
     for (let i = array.length - 1; i > 0; i--) {
@@ -23,6 +24,10 @@ function createCard(animal) {
 }
 
 function flipCard() {
+    if (!gameStarted) {
+        startGame();
+    }
+    
     if (flippedCards.length < 2 && !this.classList.contains('flipped')) {
         this.classList.add('flipped');
         this.textContent = this.dataset.animal;
@@ -34,6 +39,11 @@ function flipCard() {
             setTimeout(checkMatch, 700);
         }
     }
+}
+
+function startGame() {
+    gameStarted = true;
+    timerInterval = setInterval(updateTimer, 1000);
 }
 
 function checkMatch() {
@@ -79,7 +89,7 @@ function checkWin() {
         const bonus = Math.max(0, Math.floor(maxBonus * (1 - (moves - minAttempts) / (minAttempts * 2))));
         score += bonus;
         updateScore();
-        document.getElementById('win-message').textContent = `Congratulations! You won in ${moves} moves and ${seconds} seconds! Bonus: ${bonus}`;
+        document.getElementById('win-message').textContent = `Congratulations! You won in ${moves} moves and ${seconds} seconds!! Bonus: ${bonus}`;
         document.getElementById('win-message').style.display = 'block';
     }
 }
@@ -92,6 +102,7 @@ function initializeGame() {
     score = 0;
     moves = 0;
     seconds = 0;
+    gameStarted = false;
     updateScore();
     updateMoves();
     document.getElementById('timer-value').textContent = '00:00';
@@ -103,7 +114,6 @@ function initializeGame() {
     });
 
     clearInterval(timerInterval);
-    timerInterval = setInterval(updateTimer, 1000);
 }
 
 function resetGame() {
@@ -114,7 +124,3 @@ window.addEventListener('DOMContentLoaded', () => {
     initializeGame();
     document.getElementById('play-again').addEventListener('click', resetGame);
 });
-
-// document.getElementById('play-again').addEventListener('click', initializeGame);
-
-// initializeGame();
