@@ -89,7 +89,7 @@ function checkWin() {
         const bonus = Math.max(0, Math.floor(maxBonus * (1 - (moves - minAttempts) / (minAttempts * 2))));
         score += bonus;
         updateScore();
-        document.getElementById('win-message').textContent = `Congratulations! You won in ${moves} moves and ${seconds} seconds!! Bonus: ${bonus}`;
+        document.getElementById('win-message').textContent = `Congratulations! You won in ${moves} moves and ${seconds} seconds! Bonus: ${bonus}`;
         document.getElementById('win-message').style.display = 'block';
     }
 }
