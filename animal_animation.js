@@ -109,19 +109,22 @@ function checkWin() {
             `Congratulations! You won in ${moves} moves and ${seconds} seconds!`;
         document.getElementById('win-message').style.display = 'block';
         
+        // Hide game board
+        document.getElementById('game-board').style.display = 'none';
+        
         // Update final total score
         score += bonus;
     }
 }
 
 function initializeGame() {
-    // Clear and reset game board
+    // Reset game board
     const gameBoard = document.getElementById('game-board');
     gameBoard.innerHTML = '';
-    gameBoard.style.display = 'grid'; // Ensure game board is visible
+    gameBoard.style.display = 'grid';  // Make sure game board is visible
     
     // Reset all game variables
-    cards = shuffleCards([...animals, ...animals]); // Create fresh copy of cards array
+    cards = shuffleCards([...animals, ...animals]);
     matchedPairs = 0;
     score = 0;
     moves = 0;
@@ -154,6 +157,10 @@ function initializeGame() {
 }
 
 function resetGame() {
+    // Make sure the game board is visible before initializing
+    const gameBoard = document.getElementById('game-board');
+    gameBoard.style.display = 'grid';
+    
     initializeGame();
 }
 
