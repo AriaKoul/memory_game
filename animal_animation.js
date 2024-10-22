@@ -98,9 +98,9 @@ function checkWin() {
         const scoreElement = document.getElementById('score');
         scoreElement.innerHTML = `
             <div class="final-score-breakdown">
-                <div><strong>Initial Score: ${score}</strong></div>
-                <div><strong>Bonus Points: ${bonus}</strong></div>
-                <div><strong>Final Score: ${score + bonus}</strong></div>
+                <strong>Initial Score: ${score}</strong><br>
+                <strong>Bonus Points: ${bonus}</strong><br>
+                <strong>Final Score: ${score + bonus}</strong>
             </div>
         `;
         
@@ -115,14 +115,19 @@ function checkWin() {
 }
 
 function initializeGame() {
+    // Clear and reset game board
     const gameBoard = document.getElementById('game-board');
     gameBoard.innerHTML = '';
-    cards = shuffleCards(cards);
+    gameBoard.style.display = 'grid'; // Ensure game board is visible
+    
+    // Reset all game variables
+    cards = shuffleCards([...animals, ...animals]); // Create fresh copy of cards array
     matchedPairs = 0;
     score = 0;
     moves = 0;
     seconds = 0;
     gameStarted = false;
+    flippedCards = [];
     
     // Reset displays
     updateScore();
@@ -139,6 +144,7 @@ function initializeGame() {
         <strong>Score: <span id="score-value">0</span></strong>
     `;
 
+    // Create and append new cards
     cards.forEach(animal => {
         const card = createCard(animal);
         gameBoard.appendChild(card);
@@ -156,11 +162,10 @@ const style = document.createElement('style');
 style.textContent = `
     .final-score-breakdown {
         text-align: center;
-        margin: 20px 0;
-    }
-    .final-score-breakdown div {
         margin: 10px 0;
-        font-size: 1.2em;
+    }
+    .final-score-breakdown br {
+        margin: 5px 0;
     }
 `;
 document.head.appendChild(style);
