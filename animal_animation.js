@@ -109,9 +109,6 @@ function checkWin() {
             `Congratulations! You won in ${moves} moves and ${seconds} seconds!`;
         document.getElementById('win-message').style.display = 'block';
         
-        // Hide game board
-        document.getElementById('game-board').style.display = 'none';
-        
         // Update final total score
         score += bonus;
     }
@@ -121,7 +118,6 @@ function initializeGame() {
     // Reset game board
     const gameBoard = document.getElementById('game-board');
     gameBoard.innerHTML = '';
-    gameBoard.style.display = 'grid';  // Make sure game board is visible
     
     // Reset all game variables
     cards = shuffleCards([...animals, ...animals]);
@@ -157,10 +153,6 @@ function initializeGame() {
 }
 
 function resetGame() {
-    // Make sure the game board is visible before initializing
-    const gameBoard = document.getElementById('game-board');
-    gameBoard.style.display = 'grid';
-    
     initializeGame();
 }
 
