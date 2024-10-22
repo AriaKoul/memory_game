@@ -84,13 +84,33 @@ function updateTimer() {
 function checkWin() {
     if (matchedPairs === animals.length) {
         clearInterval(timerInterval);
+        
+        // Calculate bonus
         const minAttempts = animals.length;
-        const maxBonus = animals.length * POINTS_PER_MATCH / 2; // 50% bonus for perfect game
+        const maxBonus = animals.length * POINTS_PER_MATCH / 2;
         const bonus = Math.max(0, Math.floor(maxBonus * (1 - (moves - minAttempts) / (minAttempts * 2))));
-        score += bonus;
-        updateScore();
-        document.getElementById('win-message').textContent = `Congratulations! You won in ${moves} moves and ${seconds} seconds! Bonus: ${bonus}`;
+        
+        // Hide timer and moves display
+        document.getElementById('timer').style.display = 'none';
+        document.getElementById('moves').style.display = 'none';
+        
+        // Update score display
+        const scoreElement = document.getElementById('score');
+        scoreElement.innerHTML = `
+            <div class="final-score-breakdown">
+                <div><strong>Initial Score: ${score}</strong></div>
+                <div><strong>Bonus Points: ${bonus}</strong></div>
+                <div><strong>Final Score: ${score + bonus}</strong></div>
+            </div>
+        `;
+        
+        // Update win message without bonus mention
+        document.getElementById('win-message').textContent = 
+            `Congratulations! You won in ${moves} moves and ${seconds} seconds!`;
         document.getElementById('win-message').style.display = 'block';
+        
+        // Update final total score
+        score += bonus;
     }
 }
 
@@ -103,10 +123,21 @@ function initializeGame() {
     moves = 0;
     seconds = 0;
     gameStarted = false;
+    
+    // Reset displays
     updateScore();
     updateMoves();
     document.getElementById('timer-value').textContent = '00:00';
     document.getElementById('win-message').style.display = 'none';
+    
+    // Show timer and moves display again
+    document.getElementById('timer').style.display = 'block';
+    document.getElementById('moves').style.display = 'block';
+    
+    // Reset score display to original format
+    document.getElementById('score').innerHTML = `
+        <strong>Score: <span id="score-value">0</span></strong>
+    `;
 
     cards.forEach(animal => {
         const card = createCard(animal);
@@ -119,6 +150,20 @@ function initializeGame() {
 function resetGame() {
     initializeGame();
 }
+
+// Add styling for score breakdown
+const style = document.createElement('style');
+style.textContent = `
+    .final-score-breakdown {
+        text-align: center;
+        margin: 20px 0;
+    }
+    .final-score-breakdown div {
+        margin: 10px 0;
+        font-size: 1.2em;
+    }
+`;
+document.head.appendChild(style);
 
 window.addEventListener('DOMContentLoaded', () => {
     initializeGame();
