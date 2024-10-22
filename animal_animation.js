@@ -118,6 +118,7 @@ function initializeGame() {
     // Reset game board
     const gameBoard = document.getElementById('game-board');
     gameBoard.innerHTML = '';
+    gameBoard.className = 'game-board';
     
     // Reset all game variables
     cards = shuffleCards([...animals, ...animals]);
