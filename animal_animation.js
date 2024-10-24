@@ -115,10 +115,9 @@ function checkWin() {
 }
 
 function initializeGame() {
-    // Reset game board
+    // Reset game board first
     const gameBoard = document.getElementById('game-board');
     gameBoard.innerHTML = '';
-    gameBoard.className = 'game-board';
     
     // Reset all game variables
     cards = shuffleCards([...animals, ...animals]);
@@ -133,24 +132,32 @@ function initializeGame() {
     updateScore();
     updateMoves();
     document.getElementById('timer-value').textContent = '00:00';
-    document.getElementById('win-message').style.display = 'none';
     
-    // Show timer and moves display again
-    document.getElementById('timer').style.display = 'block';
-    document.getElementById('moves').style.display = 'block';
+    // Reset and show timer and moves displays
+    const timerDisplay = document.getElementById('timer');
+    const movesDisplay = document.getElementById('moves');
+    timerDisplay.style.display = 'block';
+    movesDisplay.style.display = 'block';
+    
+    // Hide win message
+    const winMessage = document.getElementById('win-message');
+    winMessage.style.display = 'none';
+    winMessage.textContent = '';
     
     // Reset score display to original format
-    document.getElementById('score').innerHTML = `
-        <strong>Score: <span id="score-value">0</span></strong>
-    `;
-
+    const scoreElement = document.getElementById('score');
+    scoreElement.innerHTML = `<strong>Score: <span id="score-value">0</span></strong>`;
+    
     // Create and append new cards
     cards.forEach(animal => {
         const card = createCard(animal);
         gameBoard.appendChild(card);
     });
 
-    clearInterval(timerInterval);
+    // Clear any existing timer
+    if (timerInterval) {
+        clearInterval(timerInterval);
+    }
 }
 
 function resetGame() {
