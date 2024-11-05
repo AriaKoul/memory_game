@@ -84,41 +84,92 @@ function updateTimer() {
 function checkWin() {
     if (matchedPairs === fruits.length) {
         clearInterval(timerInterval);
+        
+        // Calculate bonus
         const minAttempts = fruits.length;
-        const maxBonus = fruits.length * POINTS_PER_MATCH / 2; // 50% bonus for perfect game
+        const maxBonus = fruits.length * POINTS_PER_MATCH / 2;
         const bonus = Math.max(0, Math.floor(maxBonus * (1 - (moves - minAttempts) / (minAttempts * 2))));
-        score += bonus;
-        updateScore();
-        document.getElementById('win-message').textContent = `Congratulations! You won in ${moves} moves and ${seconds} seconds! Bonus: ${bonus}`;
+        
+        // Hide timer and moves display
+        document.getElementById('timer').style.display = 'none';
+        document.getElementById('moves').style.display = 'none';
+        
+        // Update score display
+        const scoreElement = document.getElementById('score');
+        scoreElement.innerHTML = `
+            <div class="final-score-breakdown">
+                <strong>Initial Score: ${score}</strong><br>
+                <strong>Bonus Points: ${bonus}</strong><br>
+                <strong>Final Score: ${score + bonus}</strong>
+            </div>
+        `;
+        
+        // Update win message without bonus mention
+        document.getElementById('win-message').textContent = 
+            `Congratulations! You won in ${moves} moves and ${seconds} seconds!`;
         document.getElementById('win-message').style.display = 'block';
+        
+        // Update final total score
+        score += bonus;
     }
 }
 
 function initializeGame() {
-    const gameBoard = document.getElementById('game-board');
-    gameBoard.innerHTML = '';
-    cards = shuffleCards(cards);
+    // Clear any existing timer
+    if (timerInterval) {
+        clearInterval(timerInterval);
+    }
+    
+    // Reset all game variables
+    cards = shuffleCards([...fruits, ...fruits]);
     matchedPairs = 0;
     score = 0;
     moves = 0;
     seconds = 0;
     gameStarted = false;
-    updateScore();
-    updateMoves();
-    document.getElementById('timer-value').textContent = '00:00';
-    document.getElementById('win-message').style.display = 'none';
-
+    flippedCards = [];
+    
+    // Reset game board
+    const gameBoard = document.getElementById('game-board');
+    gameBoard.innerHTML = '';
+    gameBoard.className = 'game-board';  // Ensure the grid layout is maintained
+    
+    // Create and append new cards
     cards.forEach(fruit => {
         const card = createCard(fruit);
         gameBoard.appendChild(card);
     });
-
-    clearInterval(timerInterval);
+    
+    // Reset all displays to original state
+    document.getElementById('score').innerHTML = '<strong>Score: <span id="score-value">0</span></strong>';
+    document.getElementById('moves').innerHTML = '<strong>Moves: <span id="moves-value">0</span></strong>';
+    document.getElementById('timer').innerHTML = '<strong>Time: <span id="timer-value">00:00</span></strong>';
+    
+    // Make sure all displays are visible
+    document.getElementById('score').style.display = 'block';
+    document.getElementById('moves').style.display = 'block';
+    document.getElementById('timer').style.display = 'block';
+    
+    // Hide win message
+    document.getElementById('win-message').style.display = 'none';
 }
 
 function resetGame() {
-    initializeGame();
+    window.location.reload();
 }
+
+// Add styling for score breakdown
+const style = document.createElement('style');
+style.textContent = `
+    .final-score-breakdown {
+        text-align: center;
+        margin: 10px 0;
+    }
+    .final-score-breakdown br {
+        margin: 5px 0;
+    }
+`;
+document.head.appendChild(style);
 
 window.addEventListener('DOMContentLoaded', () => {
     initializeGame();
