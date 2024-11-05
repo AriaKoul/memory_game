@@ -115,9 +115,10 @@ function checkWin() {
 }
 
 function initializeGame() {
-    // Reset game board first
-    const gameBoard = document.getElementById('game-board');
-    gameBoard.innerHTML = '';
+    // Clear any existing timer
+    if (timerInterval) {
+        clearInterval(timerInterval);
+    }
     
     // Reset all game variables
     cards = shuffleCards([...animals, ...animals]);
@@ -128,36 +129,29 @@ function initializeGame() {
     gameStarted = false;
     flippedCards = [];
     
-    // Reset displays
-    updateScore();
-    updateMoves();
-    document.getElementById('timer-value').textContent = '00:00';
-    
-    // Reset and show timer and moves displays
-    const timerDisplay = document.getElementById('timer');
-    const movesDisplay = document.getElementById('moves');
-    timerDisplay.style.display = 'block';
-    movesDisplay.style.display = 'block';
-    
-    // Hide win message
-    const winMessage = document.getElementById('win-message');
-    winMessage.style.display = 'none';
-    winMessage.textContent = '';
-    
-    // Reset score display to original format
-    const scoreElement = document.getElementById('score');
-    scoreElement.innerHTML = `<strong>Score: <span id="score-value">0</span></strong>`;
+    // Reset game board
+    const gameBoard = document.getElementById('game-board');
+    gameBoard.innerHTML = '';
+    gameBoard.className = 'game-board';  // Ensure the grid layout is maintained
     
     // Create and append new cards
     cards.forEach(animal => {
         const card = createCard(animal);
         gameBoard.appendChild(card);
     });
-
-    // Clear any existing timer
-    if (timerInterval) {
-        clearInterval(timerInterval);
-    }
+    
+    // Reset all displays to original state
+    document.getElementById('score').innerHTML = '<strong>Score: <span id="score-value">0</span></strong>';
+    document.getElementById('moves').innerHTML = '<strong>Moves: <span id="moves-value">0</span></strong>';
+    document.getElementById('timer').innerHTML = '<strong>Time: <span id="timer-value">00:00</span></strong>';
+    
+    // Make sure all displays are visible
+    document.getElementById('score').style.display = 'block';
+    document.getElementById('moves').style.display = 'block';
+    document.getElementById('timer').style.display = 'block';
+    
+    // Hide win message
+    document.getElementById('win-message').style.display = 'none';
 }
 
 function resetGame() {
