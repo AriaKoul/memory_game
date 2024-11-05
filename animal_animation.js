@@ -155,7 +155,8 @@ function initializeGame() {
 }
 
 function resetGame() {
-    initializeGame();
+    // initializeGame();
+    window.location.reload();
 }
 
 // Add styling for score breakdown
