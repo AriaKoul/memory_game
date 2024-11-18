@@ -1,0 +1,87 @@
+/* Card flip animation */
+.card {
+    transition: transform 0.6s;
+    transform-style: preserve-3d;
+    cursor: pointer;
+    position: relative;
+}
+
+.card.flipped {
+    transform: rotateY(180deg);
+}
+
+/* Match celebration animation */
+@keyframes celebrate {
+    0% { transform: scale(1); }
+    50% { transform: scale(1.1); }
+    100% { transform: scale(1); }
+}
+
+.matched {
+    animation: celebrate 0.5s ease-in-out;
+}
+
+/* Score increase animation */
+@keyframes scoreIncrease {
+    0% { transform: scale(1); color: inherit; }
+    50% { transform: scale(1.2); color: #4CAF50; }
+    100% { transform: scale(1); color: inherit; }
+}
+
+.score-animate {
+    animation: scoreIncrease 0.5s ease-in-out;
+}
+
+/* Game board fade in */
+@keyframes fadeIn {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+}
+
+.game-board {
+    animation: fadeIn 0.8s ease-out;
+}
+
+/* Win message animation */
+@keyframes slideIn {
+    from { 
+        opacity: 0;
+        transform: translateY(-50px);
+    }
+    to { 
+        opacity: 1;
+        transform: translateY(0);
+    }
+}
+
+#win-message {
+    animation: slideIn 0.8s ease-out;
+}
+
+/* Card hover effect */
+.card:not(.flipped):not(.matched):hover {
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+}
+
+/* Mismatch shake animation */
+@keyframes shake {
+    0%, 100% { transform: translateX(0); }
+    25% { transform: translateX(-5px); }
+    75% { transform: translateX(5px); }
+}
+
+.mismatch {
+    animation: shake 0.4s ease-in-out;
+}
+
+/* Timer pulse animation when low on time */
+@keyframes timerPulse {
+    0% { color: inherit; }
+    50% { color: #ff4444; }
+    100% { color: inherit; }
+}
+
+.timer-warning {
+    animation: timerPulse 1s infinite;
+}

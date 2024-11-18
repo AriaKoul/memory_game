@@ -47,22 +47,36 @@ function startGame() {
 }
 
 function checkMatch() {
-    const [card1, card2] = flippedCards;
-    if (card1.dataset.fruit === card2.dataset.fruit) {
-        card1.removeEventListener('click', flipCard);
-        card2.removeEventListener('click', flipCard);
-        matchedPairs++;
-        score += POINTS_PER_MATCH;
-    } else {
-        card1.classList.remove('flipped');
-        card2.classList.remove('flipped');
-        card1.textContent = '';
-        card2.textContent = '';
-    }
+    const [firstCard, secondCard] = flippedCards;
+    const match = firstCard.dataset.fruit === secondCard.dataset.fruit;
 
+    if (match) {
+        firstCard.classList.add('matched');
+        secondCard.classList.add('matched');
+        score += POINTS_PER_MATCH;
+        matchedPairs++;
+        
+        // Add score animation
+        const scoreValue = document.getElementById('score-value');
+        scoreValue.classList.add('score-animate');
+        setTimeout(() => scoreValue.classList.remove('score-animate'), 500);
+        
+        updateScore();
+        checkWin();
+    } else {
+        // Add mismatch animation
+        firstCard.classList.add('mismatch');
+        secondCard.classList.add('mismatch');
+        
+        setTimeout(() => {
+            firstCard.classList.remove('mismatch', 'flipped');
+            secondCard.classList.remove('mismatch', 'flipped');
+            firstCard.textContent = '';
+            secondCard.textContent = '';
+        }, 700);
+    }
+    
     flippedCards = [];
-    updateScore();
-    checkWin();
 }
 
 function updateScore() {
@@ -77,7 +91,14 @@ function updateTimer() {
     seconds++;
     const minutes = Math.floor(seconds / 60);
     const remainingSeconds = seconds % 60;
-    document.getElementById('timer-value').textContent = 
+    const timerValue = document.getElementById('timer-value');
+    
+    // Add warning animation when time exceeds 2 minutes
+    if (seconds > 120 && !timerValue.classList.contains('timer-warning')) {
+        timerValue.classList.add('timer-warning');
+    }
+    
+    timerValue.textContent = 
         `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
@@ -90,11 +111,15 @@ function checkWin() {
         const maxBonus = fruits.length * POINTS_PER_MATCH / 2;
         const bonus = Math.max(0, Math.floor(maxBonus * (1 - (moves - minAttempts) / (minAttempts * 2))));
         
-        // Hide timer and moves display
-        document.getElementById('timer').style.display = 'none';
-        document.getElementById('moves').style.display = 'none';
+        // Hide timer and moves display with fade out
+        const displays = [document.getElementById('timer'), document.getElementById('moves')];
+        displays.forEach(display => {
+            display.style.transition = 'opacity 0.5s';
+            display.style.opacity = '0';
+            setTimeout(() => display.style.display = 'none', 500);
+        });
         
-        // Update score display
+        // Update score display with animation
         const scoreElement = document.getElementById('score');
         scoreElement.innerHTML = `
             <div class="final-score-breakdown">
@@ -104,10 +129,11 @@ function checkWin() {
             </div>
         `;
         
-        // Update win message without bonus mention
-        document.getElementById('win-message').textContent = 
+        // Show win message with animation
+        const winMessage = document.getElementById('win-message');
+        winMessage.textContent = 
             `Congratulations! You won in ${moves} moves and ${seconds} seconds!`;
-        document.getElementById('win-message').style.display = 'block';
+        winMessage.style.display = 'block';
         
         // Update final total score
         score += bonus;
@@ -158,12 +184,15 @@ function resetGame() {
     window.location.reload();
 }
 
-// Add styling for score breakdown
+// Add styling for animations
 const style = document.createElement('style');
 style.textContent = `
     .final-score-breakdown {
         text-align: center;
         margin: 10px 0;
+        opacity: 0;
+        animation: fadeIn 0.8s ease-out forwards;
+        animation-delay: 0.5s;
     }
     .final-score-breakdown br {
         margin: 5px 0;
